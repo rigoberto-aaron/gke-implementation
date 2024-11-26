@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: backend-go
+  name: backend-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: backend-go
+  template:
+    metadata:
+      labels:
+        service: backend-go
+    spec:
+      containers:
+        - image: us-central1-docker.pkg.dev/
+          name: backend
+          ports:
+          - containerPort: 80
+      restartPolicy: Always

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: proxy
+  name: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: proxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: proxy
+    spec:
+      containers:
+        - image: nginx:latest
+          name: proxy
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d/default.conf
+              name: proxy-cm0
+              readOnly: true
+              subPath: default.conf
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: nginx.conf
+                path: default.conf
+            name: proxy-cm0
+          name: proxy-cm0
